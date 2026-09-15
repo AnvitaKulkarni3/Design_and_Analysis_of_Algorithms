@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 99
+
+struct node {
+    int vertex;
+    struct node* next;
+};
+typedef struct node* GNODE;
+
+GNODE graph[20];
+int visited[20];
+int queue[MAX], front = -1, rear = -1;
+int n;
+
+void insertQueue(int vertex) {
+    if (rear == MAX - 1)
+        printf("Queue Overflow.\n");
+    else {
+        if (front == -1)
+            front = 0;
+        rear++;
+        queue[rear] = vertex;
+    }
+}
+
+int isEmptyQueue() {
+    return (front == -1 || front > rear);
+}
+
+int deleteQueue() {
+    if (isEmptyQueue()) {
+        printf("Queue Underflow\n");
+        exit(1);
+    }
+    return queue[front++];
+}
+
+void BFS(int v) {
+    int current_vertex, neighbor;
+    GNODE temp;
+
+    // Mark the starting vertex as visited and insert it into the queue
+    visited[v] = 1;
+    insertQueue(v);
+
+    // Continue traversal until the queue is empty
+    while (!isEmptyQueue()) {
+        // Dequeue the next vertex and print it
+        current_vertex = deleteQueue();
+        printf("\n%d", current_vertex);
+
+        // Traverse all adjacent neighbors of the current vertex
+        temp = graph[current_vertex];
+        while (temp != NULL) {
+            neighbor = temp->vertex;
+
+            // If the neighbor hasn't been visited yet, mark it and enqueue it
+            if (visited[neighbor] == 0) {
+                visited[neighbor] = 1;
+                insertQueue(neighbor);
+            }
+            temp = temp->next;
+        }
+	}
+    
+}
+
+void main() {
+    int N, E, s, d, i, v;
+    GNODE p, q;
+
+    printf("Enter the number of vertices: ");
+    scanf("%d", &N);
+    n = N;
+
+    for (i = 0; i < N; i++) {
